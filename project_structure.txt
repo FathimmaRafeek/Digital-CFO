@@ -1,0 +1,21 @@
+LucidPlus SME Digital CFO — local MVP / synthetic-data demo
+
+Backend
+  main.py                 FastAPI routes, demo seed data, and alert scheduler
+  models.py               Companies, ledger, receivables, payables, consent, referrals
+  schemas.py              Request validation
+  financial_engine.py     Ledger metrics, alerts, and explainable cash forecast
+  cfo_agents.py           Optional AI briefing with deterministic fallback
+  database.py             Async SQLite engine and session setup
+
+Web experience
+  static/index.html       Financial cockpit, forecast, receivables, payables,
+                          local invoice extraction, consent controls, aggregate RM view
+  invoice_extraction.py   On-device OCR and reviewable invoice-field extraction
+
+Verification
+  tests/                  API/engine unit tests
+
+The demo uses synthetic data. OCR inference is local; live bank, Account Aggregator,
+GST, identity, and payment integrations are not connected. Production deployment requires
+bank-approved authentication, authorization, security, and data-governance controls.

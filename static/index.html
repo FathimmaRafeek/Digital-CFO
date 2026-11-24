@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#101e36" />
+  <title>LucidPlus | SME Digital CFO</title>
+  <style>
+    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17233b;background:#f4f6fa;font-synthesis:none;text-rendering:optimizeLegibility}
+    *{box-sizing:border-box}body{margin:0;min-width:320px}button,input,select{font:inherit}button{cursor:pointer}
+    .shell{min-height:100vh;display:grid;grid-template-columns:244px minmax(0,1fr)}
+    .sidebar{background:#101e36;color:#fff;padding:25px 17px;display:flex;flex-direction:column;gap:28px}
+    .brand{display:flex;align-items:center;gap:11px;padding:0 10px}.brand-mark{width:37px;height:37px;border-radius:12px;background:#a5e0bb;color:#123426;display:grid;place-items:center;font-weight:850;font-size:19px}
+    .brand-name{font-weight:750;font-size:16px;letter-spacing:.01em}.brand-sub{font-size:10px;color:#aab8ca;margin-top:3px;letter-spacing:.08em;text-transform:uppercase}
+    .nav-label{padding:0 11px 8px;color:#8e9bb0;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
+    .nav{display:grid;gap:4px}.nav button{width:100%;border:0;background:transparent;color:#c5cfdd;text-align:left;padding:11px;border-radius:9px;font-size:12px;display:flex;gap:10px;align-items:center}
+    .nav button:hover,.nav button.active{background:#223451;color:white}.nav button.active{box-shadow:inset 3px 0 #9ad5b2}
+    .nav-icon{width:18px;text-align:center;color:#a6d9bb;font-size:15px}.sidebar-bottom{margin-top:auto}.tenant{padding:14px;background:#1a2a44;border:1px solid #2a3c58;border-radius:12px}
+    .tenant-label{font-size:9px;color:#aab8ca;letter-spacing:.1em;text-transform:uppercase}.tenant-name{font-size:12px;font-weight:650;margin-top:7px}.tenant-meta{font-size:10px;color:#aab8ca;margin-top:4px}
+    .main{min-width:0;padding:27px clamp(18px,3vw,42px) 48px;max-width:1600px;width:100%;margin:0 auto}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:22px}
+    .eyebrow{font-size:10px;color:#70809a;font-weight:750;letter-spacing:.12em;text-transform:uppercase}.title{font-size:25px;line-height:1.2;letter-spacing:-.03em;margin:7px 0 5px;color:#14223a}.subtitle{font-size:12px;color:#728097;margin:0}
+    .top-actions{display:flex;align-items:center;gap:9px}.live-pill,.demo-pill{border-radius:999px;padding:8px 11px;font-size:10px;font-weight:700;white-space:nowrap}.live-pill{background:#e8f4ec;color:#28724b}.live-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#48a974;margin-right:6px}.demo-pill{background:#fff5e3;color:#8d6010;border:1px solid #f1e2bd}
+    .notice{border:1px solid #e8dfc7;background:#fff9ed;color:#6b5834;padding:10px 13px;border-radius:10px;font-size:11px;margin-bottom:19px}
+    .page{display:none}.page.active{display:block}.grid{display:grid;gap:15px}.kpis{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:16px}
+    .card{background:#fff;border:1px solid #e8ecf2;border-radius:13px;padding:17px;box-shadow:0 3px 12px rgba(27,43,69,.025);min-width:0}
+    .kpi-label{font-size:10px;color:#78869b;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.kpi-value{font-size:23px;font-weight:760;letter-spacing:-.035em;color:#14223a;margin:12px 0 5px}.kpi-note{font-size:10px;color:#7e899b}
+    .accent-card{background:#172a47;color:#fff;border-color:#172a47}.accent-card .kpi-label,.accent-card .kpi-note{color:#bdcadd}.accent-card .kpi-value{color:#fff}
+    .two-col{grid-template-columns:minmax(0,1.35fr) minmax(290px,.85fr);margin-bottom:15px}.three-col{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:13px}.card-title{font-size:13px;font-weight:750;color:#1b2940;margin:0}.card-caption{font-size:10px;color:#8792a2;margin-top:5px}
+    .link-button{border:0;background:transparent;color:#477257;font-weight:700;font-size:10px;padding:3px}.tag{display:inline-flex;align-items:center;border-radius:999px;padding:5px 8px;background:#f0f3f7;color:#627187;font-size:9px;font-weight:700}
+    .tag.green{background:#e8f4ec;color:#32744e}.tag.amber{background:#fff4df;color:#8e6414}.tag.red{background:#fff0ee;color:#aa4d40}.tag.blue{background:#edf2fb;color:#506c9c}
+    .chart-wrap{width:100%;overflow:hidden}.chart-wrap svg{width:100%;height:auto;display:block}.legend{display:flex;gap:15px;font-size:10px;color:#768398}.legend span:before{content:"";display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:6px;background:#50816b}.legend .out:before{background:#d58b76}
+    .alerts{display:grid;gap:8px}.alert{border:1px solid #f0dfc2;background:#fff9ef;padding:10px;border-radius:9px}.alert.critical{border-color:#f1d2cd;background:#fff5f3}.alert-title{font-size:10px;font-weight:750;color:#553d1a}.alert.critical .alert-title{color:#8f4137}.alert-copy{font-size:10px;line-height:1.5;color:#786b59;margin-top:4px}
+    .list{display:grid;gap:8px}.list-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px;border:1px solid #edf0f4;border-radius:9px}.row-title{font-size:11px;font-weight:700;color:#25344c}.row-sub{font-size:10px;color:#8590a0;margin-top:4px}.row-right{text-align:right;white-space:nowrap}.row-amount{font-size:11px;font-weight:750;color:#24334c}.row-action{border:0;background:#eff4f0;color:#3b7653;padding:6px 9px;border-radius:7px;font-size:9px;font-weight:750;margin-top:6px}
+    .briefing{min-height:105px;border:1px solid #edf0f4;background:#f8fafc;padding:13px;border-radius:9px;font-size:11px;line-height:1.65;color:#536176;white-space:pre-line}
+    .ask-row{display:flex;gap:7px;margin-top:9px}.input{width:100%;min-width:0;border:1px solid #dfe5ec;border-radius:8px;padding:9px 10px;background:#fff;color:#25344c;font-size:11px;outline:none}.input:focus{border-color:#80aa8f;box-shadow:0 0 0 3px #eaf3ed}.ask-row .input{flex:1}
+    .primary,.secondary,.danger{border:0;border-radius:8px;padding:9px 12px;font-size:10px;font-weight:750}.primary{background:#244c38;color:#fff}.primary:hover{background:#1b3d2c}.secondary{background:#edf2ee;color:#355b42}.danger{background:#fff0ee;color:#a5483e}.primary:disabled{opacity:.55;cursor:wait}
+    .table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:620px}.table th{text-align:left;color:#8792a1;font-size:9px;text-transform:uppercase;letter-spacing:.08em;padding:10px 9px;border-bottom:1px solid #e9edf2}.table td{padding:12px 9px;border-bottom:1px solid #f0f2f5;font-size:10px;color:#4f5c70}.table tr:last-child td{border-bottom:0}.table strong{font-size:10px;color:#25344c}
+    .section-grid{grid-template-columns:minmax(0,1.3fr) minmax(270px,.7fr)}.info-box{background:#f4f7f5;border:1px solid #e3ebe5;border-radius:10px;padding:13px;color:#526858;font-size:10px;line-height:1.65}.metric-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #edf0f4;font-size:10px;color:#748197}.metric-row:last-child{border-bottom:0}.metric-row strong{color:#24344b}
+    .consent-list{display:grid;gap:10px;margin:12px 0}.check-row{display:flex;align-items:flex-start;gap:9px;font-size:10px;line-height:1.5;color:#536176}.check-row input{accent-color:#315f45;margin:1px 0 0}.locked{border:1px dashed #dce2e9;border-radius:10px;padding:15px;color:#718096;font-size:10px;line-height:1.6;background:#fafbfd}
+    .empty{color:#929cab;font-size:10px;padding:14px 4px}.modal-backdrop{position:fixed;inset:0;background:rgba(12,25,43,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:5}.modal-backdrop.open{display:flex}.modal{width:min(100%,480px);max-height:90vh;overflow:auto;background:white;border-radius:15px;padding:20px;box-shadow:0 20px 70px #101e3640}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.modal-title{font-size:15px;font-weight:800;margin:0}.close{border:0;background:#f1f3f6;border-radius:7px;width:28px;height:28px;color:#536176}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:grid;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:9px;color:#718096;font-weight:700}.form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.toast{position:fixed;bottom:20px;right:20px;background:#152640;color:white;padding:11px 15px;border-radius:9px;font-size:11px;box-shadow:0 8px 24px #14233b30;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none;z-index:8}.toast.show{opacity:1;transform:translateY(0)}.small{font-size:9px;color:#8a95a5;line-height:1.5}
+    @media(max-width:1050px){.shell{grid-template-columns:205px minmax(0,1fr)}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.two-col,.section-grid{grid-template-columns:1fr}.three-col{grid-template-columns:1fr 1fr}}
+    @media(max-width:700px){.shell{display:block}.sidebar{padding:12px 14px;gap:10px}.brand{padding:0 3px}.nav-label,.sidebar-bottom{display:none}.nav{display:flex;overflow:auto;gap:5px;padding:4px 0}.nav button{width:auto;white-space:nowrap;padding:9px}.nav button.active{box-shadow:inset 0 -2px #9ad5b2}.main{padding:20px 14px 35px}.topbar{align-items:flex-start}.title{font-size:21px}.top-actions{flex-direction:column;align-items:flex-end}.kpis{gap:9px}.card{padding:14px}.kpi-value{font-size:19px}.three-col{grid-template-columns:1fr}}
+    :root{color:#182a3b;background:#f3f7f5}
+    body{background:radial-gradient(ellipse at 92% 0%,#e5f1e9 0,transparent 36%),#f3f7f5}
+    .shell{grid-template-columns:258px minmax(0,1fr)}
+    .sidebar{background:linear-gradient(180deg,#102b31 0%,#13263a 100%);padding:26px 18px;position:sticky;top:0;height:100vh}
+    .brand-mark{background:linear-gradient(145deg,#c7f0d7,#80c99d);box-shadow:0 5px 16px #72bd8b38}
+    .nav button{font-size:13px;padding:12px;border-radius:11px;transition:background .18s ease,transform .18s ease}
+    .nav button:hover{transform:translateX(2px)}
+    .nav button.active{background:#29434a;box-shadow:inset 3px 0 #9ad5b2}
+    .main{max-width:1700px;padding-top:32px}
+    .topbar{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;margin-bottom:22px}
+    .eyebrow{font-size:11px;color:#527666}
+    .title{font-size:32px;letter-spacing:-.045em}
+    .subtitle{font-size:14px}
+    .top-actions{display:flex;flex-wrap:wrap;justify-content:flex-end}
+    .live-pill,.demo-pill{font-size:11px;padding:9px 12px}
+    .notice{font-size:12px;line-height:1.6;padding:12px 15px;border-radius:13px}
+    .grid{gap:18px}
+    .card{padding:21px;border-radius:17px;border-color:#e4ebe7;box-shadow:0 7px 24px #18352a0a;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+    .card:hover{border-color:#d5e5da;box-shadow:0 12px 30px #18352a12;transform:translateY(-2px)}
+    .accent-card{background:linear-gradient(145deg,#19374a,#173444);border-color:#19374a}
+    .kpi-label{font-size:11px;letter-spacing:.07em}
+    .kpi-value{font-size:27px}
+    .kpi-note{font-size:12px}
+    .card-title{font-size:16px}
+    .card-caption{font-size:12px;line-height:1.45}
+    .tag{font-size:10px}
+    .alert-title,.row-title{font-size:12px}
+    .alert-copy,.row-sub{font-size:11px;line-height:1.55}
+    .briefing{font-size:13px;line-height:1.75;border-radius:12px;padding:15px}
+    .input{font-size:13px;padding:11px 12px;border-radius:10px}
+    .primary,.secondary,.danger{font-size:12px;padding:11px 15px;border-radius:10px;transition:transform .16s ease,background .16s ease,box-shadow .16s ease}
+    .primary{background:linear-gradient(135deg,#286047,#1d4b37);box-shadow:0 5px 13px #245a3e26}
+    .primary:hover{background:linear-gradient(135deg,#327451,#22563e);transform:translateY(-1px);box-shadow:0 8px 18px #245a3e30}
+    .secondary:hover,.row-action:hover,.link-button:hover{background:#e2eee5}
+    button:focus-visible,input:focus-visible,select:focus-visible,label.upload-zone:focus-within{outline:3px solid #78b58c;outline-offset:3px}
+    button:disabled{cursor:wait}
+    .table{min-width:680px}
+    .table th{font-size:10px}
+    .table td{font-size:12px;padding:14px 10px}
+    .table strong{font-size:12px}
+    .metric-row,.check-row,.info-box{font-size:12px}
+    .metric-row{padding:13px 0}
+    .field label{font-size:11px}
+    .modal{border-radius:20px;padding:26px}
+    .modal-title{font-size:18px}
+    .close{width:34px;height:34px;font-size:20px}
+    .form-grid{gap:14px}
+    .toast{font-size:13px;padding:13px 17px;border-radius:12px}
+    .small{font-size:11px}
+    .chart-wrap rect{transition:filter .15s ease,opacity .15s ease}
+    .chart-wrap rect:hover{filter:brightness(.92);opacity:.86}
+    .upload-zone{position:relative;display:flex;align-items:center;gap:14px;min-height:110px;padding:20px;border:1.5px dashed #bfd4c4;border-radius:14px;background:linear-gradient(140deg,#f6fbf7,#f1f7f2);cursor:pointer;transition:border-color .18s ease,background .18s ease,transform .18s ease}
+    .upload-zone:hover,.upload-zone.dragging{border-color:#55926a;background:#edf7ef;transform:translateY(-1px)}
+    .upload-zone:focus-within{outline-offset:4px}
+    .upload-icon{display:grid;place-items:center;flex:0 0 46px;height:46px;border-radius:14px;background:#e1f1e5;color:#34704a;font-size:24px;font-weight:700}
+    .upload-copy{display:grid;gap:4px}
+    .upload-copy strong{font-size:13px;color:#243b30}
+    .upload-copy span,.upload-meta{font-size:11px;color:#718579}
+    .upload-meta{margin-left:auto;text-align:right}
+    .upload-input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+    body.modal-open{overflow:hidden}
+    .modal-backdrop{backdrop-filter:blur(4px)}
+    @media(max-width:1000px){.topbar{grid-template-columns:1fr;align-items:start}.top-actions{justify-content:flex-start}}
+    @media(max-width:1050px){.shell{grid-template-columns:220px minmax(0,1fr)}.main{padding-top:25px}.title{font-size:29px}}
+    @media(max-width:700px){
+      .shell{display:block}
+      .sidebar{position:sticky;top:0;z-index:4;height:auto;padding:12px 14px 8px;gap:8px;box-shadow:0 5px 16px #112c3320}
+      .brand{padding:0 3px}
+      .brand-mark{width:33px;height:33px}
+      .nav-label,.sidebar-bottom{display:none}
+      .nav{display:flex;overflow-x:auto;gap:5px;padding:5px 1px 3px;scrollbar-width:none}
+      .nav::-webkit-scrollbar{display:none}
+      .nav button{flex:0 0 auto;width:auto;white-space:nowrap;padding:9px 11px;font-size:12px}
+      .nav button.active{box-shadow:inset 0 -2px #9ad5b2}
+      .main{padding:20px 14px 35px}
+      .topbar{gap:13px}
+      .title{font-size:27px}
+      .top-actions{justify-content:flex-start}
+      .top-actions .demo-pill{white-space:normal}
+      .kpis{gap:10px}
+      .card{padding:16px}
+      .kpi-value{font-size:21px}
+      .three-col{grid-template-columns:1fr}
+      .upload-zone{align-items:flex-start;flex-wrap:wrap}
+      .upload-meta{width:100%;margin-left:60px;text-align:left}
+      .form-grid{grid-template-columns:1fr}
+      .field.full{grid-column:auto}
+      .toast{left:14px;right:14px;bottom:14px;text-align:center}
+    }
+    @media(max-width:390px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.kpis .card{padding:12px}.kpi-value{font-size:18px;margin:8px 0 3px}.kpi-note{font-size:10px}.top-actions{gap:6px}.live-pill,.demo-pill{font-size:10px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+    .chart-head-tools{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+    .chart-switch{display:inline-flex;align-items:center;gap:3px;padding:3px;border:1px solid #e3ebe5;border-radius:10px;background:#f6f9f7}
+    .chart-switch button{border:0;border-radius:7px;background:transparent;color:#66786d;padding:7px 10px;font-size:11px;font-weight:700;transition:background .16s ease,color .16s ease,box-shadow .16s ease}
+    .chart-switch button[aria-pressed="true"]{background:#fff;color:#245a3e;box-shadow:0 2px 6px #173b281a}
+    .chart-switch button:hover{color:#245a3e}
+    .chart-wrap svg text{font-family:inherit}
+    .chart-data-table .table{min-width:520px}
+    .chart-data-table .table td,.chart-data-table .table th{padding:10px 8px}
+    .net-positive{color:#34754f!important;font-weight:700}
+    .net-negative{color:#a5483e!important;font-weight:700}
+    .expense-rows{display:grid;gap:15px}
+    .expense-row{min-width:0}
+    .expense-row-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:7px}
+    .expense-row-name{display:flex;align-items:center;gap:8px;min-width:0;font-size:12px;font-weight:700;color:#2c3d34}
+    .expense-row-name span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .expense-row-value{text-align:right;white-space:nowrap;font-size:12px;font-weight:750;color:#35473c}
+    .expense-row-value small{display:block;margin-top:3px;font-size:10px;font-weight:500;color:#819087}
+    .expense-swatch{flex:0 0 9px;width:9px;height:9px;border-radius:3px}
+    .expense-track{height:8px;overflow:hidden;border-radius:99px;background:#edf2ee}
+    .expense-track span{display:block;height:100%;min-width:2px;border-radius:inherit;transition:width .35s ease}
+    .donut-layout{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(0,1.2fr);align-items:center;gap:20px;min-height:210px}
+    .donut-chart{display:grid;place-items:center;width:min(100%,190px);aspect-ratio:1;border-radius:50%;margin:auto}
+    .donut-hole{display:grid;place-content:center;width:66%;height:66%;border-radius:50%;background:#fff;text-align:center;box-shadow:inset 0 0 0 1px #edf1ed}
+    .donut-hole strong{font-size:17px;color:#213b2d}
+    .donut-hole span{font-size:10px;color:#849188;margin-top:3px}
+    .donut-legend{display:grid;gap:11px;min-width:0}
+    .donut-legend-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .donut-legend-label{display:flex;align-items:center;gap:8px;min-width:0;font-size:11px;color:#506157}
+    .donut-legend-label span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .donut-legend-value{text-align:right;white-space:nowrap;font-size:11px;font-weight:700;color:#34483b}
+    @media(max-width:700px){.chart-head-tools{width:100%;justify-content:space-between}.chart-switch button{padding:7px 9px}.donut-layout{grid-template-columns:1fr;gap:17px}.donut-chart{width:min(55vw,180px)}.donut-legend{grid-template-columns:1fr 1fr}.donut-legend-row{align-items:flex-start}}
+    .overview-summary{margin-bottom:14px}
+    .overview-summary .kpis{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:0}
+    .overview-layout{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(290px,.8fr);gap:16px;align-items:start}
+    .overview-main{display:grid;grid-template-columns:minmax(0,1fr);gap:15px;min-width:0;align-content:start}
+    .overview-main>.card{margin:0}
+    .overview-main>.next-payments-card{grid-column:1/-1}
+    .overview-sidebar{display:grid;gap:15px;min-width:0;align-content:start}
+    .cfo-panel{margin-bottom:0}
+    .cfo-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:13px}
+    .cfo-content{display:grid;grid-template-columns:1fr;gap:10px;align-content:start}
+    .cfo-readout,.cfo-ask{min-width:0;padding:13px 15px;border:1px solid #e7ebef;border-radius:12px;background:#f8fafc}
+    .cfo-section-label{margin-bottom:8px;color:#577160;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .cfo-panel .briefing{min-height:0;padding:0;border:0;background:transparent;font-size:12px}
+    .cfo-ask-title{font-size:13px;font-weight:750;color:#253b2d}
+    .cfo-ask-copy{margin:4px 0 10px;color:#718177;font-size:11px;line-height:1.5}
+    .cfo-ask .ask-row{margin-top:0}
+    .cfo-ask .input{min-height:42px}
+    .prompt-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .prompt-chip{border:1px solid #e1ebe3;border-radius:999px;background:#f7faf8;color:#496453;padding:6px 9px;font-size:10px;font-weight:700}
+    .prompt-chip:hover{background:#e8f3eb}
+    .next-payments-card{margin-top:15px}
+    @media(max-width:1250px){
+      .main{padding-top:12px}
+      .topbar{gap:9px;margin-bottom:9px}
+      .top-actions .demo-pill{display:none}
+      .notice{margin-bottom:12px;padding:9px 12px;font-size:11px}
+      .overview-layout{grid-template-columns:minmax(0,1fr) minmax(280px,.8fr)}
+      .cfo-panel{padding:16px}
+      .cfo-heading{margin-bottom:8px}
+      .cfo-heading .tag{display:none}
+      .cfo-readout,.cfo-ask{padding:9px 10px}
+      .cfo-content{gap:7px}
+      .cfo-panel .briefing{font-size:11px;line-height:1.4}
+    }
+    @media(max-width:900px){.overview-layout{grid-template-columns:1fr}.overview-sidebar{order:-1}}
+    @media(max-width:850px){.overview-summary .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:700px){
+      .overview-summary .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .overview-summary .kpis .card{padding:10px}
+      .cfo-content{grid-template-columns:1fr}
+      .main{padding-top:12px}
+      .topbar{gap:8px;margin-bottom:10px}
+      .topbar .eyebrow{display:none}
+      .topbar .live-pill,#refreshButton{display:none}
+      .title{font-size:24px;margin-top:3px}
+      .subtitle{font-size:12px}
+      .notice{margin-bottom:9px;padding:6px 9px;font-size:9px;line-height:1.3}
+      .cfo-panel{padding:12px}
+      .cfo-heading{margin-bottom:9px}
+      .cfo-readout,.cfo-ask{padding:10px 12px}
+      .cfo-content{gap:8px}
+      .cfo-panel .briefing{font-size:11px;line-height:1.5}
+      .cfo-ask-copy{margin:3px 0 7px}
+      .prompt-chips{margin-top:6px}
+      .cfo-heading .tag{display:none}
+      .cfo-content{gap:6px}
+      .cfo-readout,.cfo-ask{padding:8px 10px}
+      .cfo-section-label{margin-bottom:5px}
+      .cfo-panel .briefing{font-size:10px;line-height:1.4}
+      .cfo-ask-copy{margin:2px 0 6px}
+      .prompt-chip{padding:5px 8px}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">L</div><div><div class="brand-name">LucidPlus</div><div class="brand-sub">SME Digital CFO</div></div></div>
+      <div>
+        <div class="nav-label">Business finance</div>
+        <nav class="nav" aria-label="Main navigation">
+          <button class="active" data-page="overview"><span class="nav-icon">⌂</span>Financial cockpit</button>
+          <button data-page="forecast"><span class="nav-icon">⌁</span>Cash forecast</button>
+          <button data-page="receivables"><span class="nav-icon">↙</span>Receivables</button>
+          <button data-page="payables"><span class="nav-icon">↗</span>Payables</button>
+          <button data-page="invoices"><span class="nav-icon">▤</span>Invoice intelligence</button>
+        </nav>
+      </div>
+      <div class="sidebar-bottom">
+        <div class="tenant"><div class="tenant-label">Demo business</div><div class="tenant-name" id="companyName">Loading...</div><div class="tenant-meta">Synthetic data · INR</div></div>
+      </div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div><div class="eyebrow">LucidPlus / SME Digital CFO</div><h1 class="title" id="pageTitle">Financial cockpit</h1><p class="subtitle" id="pageSubtitle">A clear view of today's position and the decisions ahead.</p></div>
+        <div class="top-actions"><span class="live-pill"><i class="live-dot"></i>Demo ledger</span><span class="demo-pill">Illustrative · not a credit decision</span><button class="secondary" id="refreshButton" onclick="refresh(true)" aria-label="Refresh dashboard">↻ Refresh</button><button class="primary" onclick="openModal('txModal')">＋ Add transaction</button></div>
+      </header>
+      <div class="notice"><strong>Demo only:</strong> synthetic figures, not a credit decision. Invoice uploads go to Google Gemini and are not saved here. No live bank, GST, identity, Account Aggregator, or payment integrations.</div>
+
+      <section class="page active" id="page-overview">
+        <div class="overview-summary">
+          <div class="grid kpis">
+            <article class="card accent-card"><div class="kpi-label">Cash available</div><div class="kpi-value" id="kpiCash">—</div><div class="kpi-note">Current recorded balance</div></article>
+            <article class="card"><div class="kpi-label">Monthly expenses</div><div class="kpi-value" id="kpiExpense">—</div><div class="kpi-note" id="kpiMoM">Comparing with prior month</div></article>
+            <article class="card"><div class="kpi-label">Estimated cash runway</div><div class="kpi-value" id="kpiRunway">—</div><div class="kpi-note">At the current spending pace</div></article>
+            <article class="card"><div class="kpi-label">Money customers owe</div><div class="kpi-value" id="kpiReceivables">—</div><div class="kpi-note" id="kpiPayables">Upcoming payables —</div></article>
+          </div>
+        </div>
+        <div class="overview-layout">
+          <div class="overview-main">
+            <article class="card"><div class="card-head"><div><h2 class="card-title">Cash flow, last six months</h2><div class="card-caption">Money in compared with money out</div></div><div class="chart-head-tools"><div class="chart-switch" role="group" aria-label="Cash flow chart type"><button type="button" aria-pressed="true" data-chart="trend" data-type="bar" onclick="setChartType('trend','bar')">Bars</button><button type="button" aria-pressed="false" data-chart="trend" data-type="line" onclick="setChartType('trend','line')">Lines</button><button type="button" aria-pressed="false" data-chart="trend" data-type="table" onclick="setChartType('trend','table')">Table</button></div><button class="link-button" data-goto="forecast">Explore forecast →</button></div></div><div class="chart-wrap" id="trendChart"></div><div class="legend" id="trendLegend"><span>Money in</span><span class="out">Money out</span></div></article>
+            <article class="card"><div class="card-head"><div><h2 class="card-title">Expense mix</h2><div class="card-caption">Current-month outflows by category</div></div><div class="chart-switch" role="group" aria-label="Expense chart type"><button type="button" aria-pressed="true" data-chart="expense" data-type="bar" onclick="setChartType('expense','bar')">Bars</button><button type="button" aria-pressed="false" data-chart="expense" data-type="donut" onclick="setChartType('expense','donut')">Donut</button><button type="button" aria-pressed="false" data-chart="expense" data-type="table" onclick="setChartType('expense','table')">Table</button></div></div><div class="list" id="categoryList"></div></article>
+            <article class="card next-payments-card"><div class="card-head"><div><h2 class="card-title">Next payments</h2><div class="card-caption">Unpaid obligations by due date</div></div><button class="link-button" data-goto="payables">View all →</button></div><div class="list" id="upcomingList"></div></article>
+          </div>
+          <aside class="overview-sidebar">
+            <article class="card cfo-panel">
+              <div class="cfo-heading"><div><h2 class="card-title">CFO briefing</h2><div class="card-caption">A quick business summary. Ask a question below.</div></div><span class="tag blue">Decision support</span></div>
+              <div class="cfo-content">
+                <div class="cfo-readout"><div class="cfo-section-label">Today's financial readout</div><div id="cfoOutput" class="briefing">Loading business insights…</div></div>
+                <div class="cfo-ask">
+                  <div class="cfo-ask-title">Ask your CFO assistant</div>
+                  <p class="cfo-ask-copy">Ask about cash, spending, or upcoming risks.</p>
+                  <div class="ask-row"><input class="input" id="cfoQuestion" placeholder="e.g. What should I prioritize?" aria-label="Ask your CFO assistant" /><button class="primary" id="askButton" onclick="runCFOBriefing()">Ask</button></div>
+                  <div class="prompt-chips"><button type="button" class="prompt-chip" onclick="suggestCFOQuestion('What should I prioritize this month?')">Spending priorities</button><button type="button" class="prompt-chip" onclick="suggestCFOQuestion('How many months of cash runway do I have?')">Cash runway</button></div>
+                  <div class="small" style="margin-top:8px">AI is optional; without a key, answers use ledger analysis.</div>
+                </div>
+              </div>
+            </article>
+            <article class="card"><div class="card-head"><div><h2 class="card-title">Signals to review</h2><div class="card-caption">Explainable alerts from your ledger</div></div><span class="tag amber" id="alertCount">0 active</span></div><div class="alerts" id="alertsContainer"></div></article>
+            <article class="card"><div class="card-head"><div><h2 class="card-title">Unusual activity</h2><div class="card-caption">Large expenses compared with the recorded baseline</div></div></div><div class="list" id="anomalyList"></div></article>
+          </aside>
+        </div>
+      </section>
+
+      <section class="page" id="page-forecast">
+        <div class="grid kpis">
+          <article class="card accent-card"><div class="kpi-label">Current cash</div><div class="kpi-value" id="forecastCash">—</div><div class="kpi-note">Starting balance · today</div></article>
+          <article class="card"><div class="kpi-label">Expected collections</div><div class="kpi-value" id="forecastInflows">—</div><div class="kpi-note">Open invoices within 30 days</div></article>
+          <article class="card"><div class="kpi-label">Scheduled payments</div><div class="kpi-value" id="forecastOutflows">—</div><div class="kpi-note">Unpaid obligations within 30 days</div></article>
+          <article class="card"><div class="kpi-label">Lowest projected balance</div><div class="kpi-value" id="forecastLow">—</div><div class="kpi-note" id="forecastRisk">Illustrative 30-day estimate</div></article>
+        </div>
+        <div class="grid section-grid">
+          <article class="card"><div class="card-head"><div><h2 class="card-title">30-day cash position</h2><div class="card-caption">Expected invoice collections, scheduled obligations and an even historical expense run-rate</div></div><span class="tag blue" id="forecastConfidence">Low confidence</span></div><div class="chart-wrap" id="forecastChart"></div><div class="small" id="confidenceReason" style="margin-top:8px"></div></article>
+          <article class="card"><h2 class="card-title">How this forecast works</h2><div class="card-caption">Assumptions are visible and can be improved with connected data.</div><div class="metric-row"><span>Expense basis</span><strong>Prior 90 days</strong></div><div class="metric-row"><span>Open invoices</span><strong>Expected / due date</strong></div><div class="metric-row"><span>Unpaid obligations</span><strong>Scheduled due date</strong></div><div class="info-box" id="forecastAssumptions" style="margin-top:14px"></div><div style="margin-top:13px"><button class="secondary" onclick="openModal('txModal')">Add transaction</button> <button class="secondary" onclick="openModal('payableModal')">Add payable</button></div></article>
+        </div>
+      </section>
+
+      <section class="page" id="page-receivables">
+        <div class="card"><div class="card-head"><div><h2 class="card-title">Receivables register</h2><div class="card-caption">Track open invoices, ageing and expected collection timing.</div></div><button class="primary" onclick="openModal('invoiceModal')">＋ Add invoice</button></div><div class="table-wrap" id="receivablesTable"></div></div>
+        <div class="grid three-col" style="margin-top:15px"><article class="card"><div class="kpi-label">Total open</div><div class="kpi-value" id="receivableTotal">—</div></article><article class="card"><div class="kpi-label">Overdue invoices</div><div class="kpi-value" id="overdueCount">—</div><div class="kpi-note">Follow-up may improve collection timing</div></article><article class="card"><div class="kpi-label">Collection workflow</div><div class="kpi-value" style="font-size:15px">Track → follow up → reconcile</div><div class="kpi-note">Payment matching is manual in this demo.</div></article></div>
+      </section>
+
+      <section class="page" id="page-payables">
+        <div class="card"><div class="card-head"><div><h2 class="card-title">Payables & due-date calendar</h2><div class="card-caption">Prioritise obligations before they affect liquidity.</div></div><button class="primary" onclick="openModal('payableModal')">＋ Schedule payable</button></div><div class="table-wrap" id="payablesTable"></div></div>
+      </section>
+
+      <section class="page" id="page-invoices">
+        <div class="grid section-grid">
+          <article class="card"><div class="card-head"><div><h2 class="card-title">Extract invoice details</h2><div class="card-caption">Gemini reads the invoice. You review every field before saving.</div></div><span class="tag green">Gemini AI</span></div><div class="field"><span class="small">PDF, PNG, JPEG or WEBP · up to 12 MB · up to 5 PDF pages</span><label class="upload-zone" for="invoiceFile" id="invoiceDropzone"><span class="upload-icon" aria-hidden="true">↑</span><span class="upload-copy"><strong>Drop an invoice here</strong><span>or click to choose a file</span></span><span class="upload-meta">Review before saving<br />Never auto-saved</span><input class="upload-input" type="file" id="invoiceFile" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" aria-describedby="invoiceFileName" /></label><div class="small" id="invoiceFileName" aria-live="polite" style="margin-top:8px">No file selected yet.</div></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button class="primary" id="extractButton" onclick="extractInvoice()">Extract invoice details</button><button class="secondary" onclick="openModal('invoiceModal')">Enter details manually</button></div><div class="small" id="extractStatus" role="status" aria-live="polite" style="margin-top:9px"></div><div id="extractionPreview" style="margin-top:12px"></div></article>
+          <article class="card"><h2 class="card-title">Review before saving</h2><div class="info-box">Gemini can misread totals, dates and names. Confirm every extracted value before saving. Choose receivable for a sales invoice or payable for a supplier bill.</div><div class="metric-row"><span>Supported files</span><strong>PDF · PNG · JPEG · WEBP</strong></div><div class="metric-row"><span>Maximum PDF pages</span><strong>5</strong></div><div class="metric-row"><span>Automatic save</span><strong>Never</strong></div></article>
+        </div>
+        <div class="card" style="margin-top:15px"><div class="card-head"><div><h2 class="card-title">Recently captured invoices</h2><div class="card-caption">The invoice register is the source for this list.</div></div><button class="link-button" data-goto="receivables">Open register →</button></div><div class="table-wrap" id="invoiceList"></div></div>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="txModal" role="dialog" aria-modal="true" aria-labelledby="txTitle"><div class="modal"><div class="modal-head"><h2 class="modal-title" id="txTitle">Add ledger transaction</h2><button class="close" onclick="closeModal('txModal')" aria-label="Close">×</button></div><form onsubmit="submitTx(event)"><div class="form-grid"><div class="field"><label for="txType">Type</label><select class="input" id="txType"><option value="OUTFLOW">Expense</option><option value="INFLOW">Inflow</option></select></div><div class="field"><label for="txAmount">Amount</label><input class="input" id="txAmount" type="number" min=".01" step=".01" required /></div><div class="field"><label for="txCategory">Category</label><input class="input" id="txCategory" maxlength="80" required /></div><div class="field"><label for="txVendor">Vendor / client</label><input class="input" id="txVendor" maxlength="150" required /></div><div class="field full"><label for="txDate">Transaction date</label><input class="input" id="txDate" type="date" required /></div></div><div class="form-actions"><button type="button" class="secondary" onclick="closeModal('txModal')">Cancel</button><button class="primary">Save transaction</button></div></form></div></div>
+  <div class="modal-backdrop" id="payableModal" role="dialog" aria-modal="true" aria-labelledby="payTitle"><div class="modal"><div class="modal-head"><h2 class="modal-title" id="payTitle">Schedule an obligation</h2><button class="close" onclick="closeModal('payableModal')" aria-label="Close">×</button></div><form onsubmit="submitPayable(event)"><div class="form-grid"><div class="field full"><label for="payName">Obligation</label><input class="input" id="payName" maxlength="150" required /></div><div class="field"><label for="payCategory">Category</label><input class="input" id="payCategory" maxlength="80" required /></div><div class="field"><label for="payAmount">Amount</label><input class="input" id="payAmount" type="number" min=".01" step=".01" required /></div><div class="field full"><label for="payDueDate">Due date</label><input class="input" id="payDueDate" type="date" required /></div></div><div class="form-actions"><button type="button" class="secondary" onclick="closeModal('payableModal')">Cancel</button><button class="primary">Schedule</button></div></form></div></div>
+  <div class="modal-backdrop" id="invoiceModal" role="dialog" aria-modal="true" aria-labelledby="invoiceTitle"><div class="modal"><div class="modal-head"><h2 class="modal-title" id="invoiceTitle">Review sales invoice</h2><button class="close" onclick="closeModal('invoiceModal')" aria-label="Close">×</button></div><form onsubmit="submitInvoice(event)"><div class="form-grid"><div class="field"><label for="invoiceNumber">Invoice number</label><input class="input" id="invoiceNumber" maxlength="80" required /></div><div class="field"><label for="invoiceCustomer">Customer</label><input class="input" id="invoiceCustomer" maxlength="150" required /></div><div class="field"><label for="invoiceAmount">Amount (INR)</label><input class="input" id="invoiceAmount" type="number" min=".01" step=".01" required /></div><div class="field"><label for="invoiceIssue">Issue date</label><input class="input" id="invoiceIssue" type="date" required /></div><div class="field"><label for="invoiceDue">Due date</label><input class="input" id="invoiceDue" type="date" required /></div><div class="field"><label for="invoiceExpected">Expected collection (optional)</label><input class="input" id="invoiceExpected" type="date" /></div></div><div class="form-actions"><button type="button" class="secondary" onclick="closeModal('invoiceModal')">Cancel</button><button class="primary">Save receivable</button></div></form></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+    const COMPANY_ID = "comp_001";
+    let dashboardData = null;
+    let forecastData = null;
+    let receivableData = {receivables:[],open_total:0};
+    let extractedInvoice = null;
+    let trendChartType = "bar";
+    let expenseChartType = "bar";
+    let toastTimer;
+    const pageCopy = {
+      overview:["Financial cockpit","A clear view of today's position and the decisions ahead."],
+      forecast:["Cash-flow intelligence","Explore an explainable 30-day estimate with visible assumptions."],
+      receivables:["Receivables","Track invoice ageing and expected customer collections."],
+      payables:["Payables","Plan upcoming obligations and record settlements."],
+      invoices:["Invoice intelligence","Extract invoice details with Gemini, review them and save when ready."],
+    };
+    const money = value => `₹${Number(value || 0).toLocaleString("en-IN",{maximumFractionDigits:0})}`;
+    const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+    async function api(url,options={}) {
+      const response=await fetch(url,options);
+      const text=await response.text();
+      let data={};
+      if(text){try{data=JSON.parse(text)}catch{data={detail:text}}}
+      if(!response.ok) throw new Error(`${typeof data.detail==="string"?data.detail:`Request failed (${response.status})`} (HTTP ${response.status})`);
+      return data;
+    }
+    const jsonOptions = (method,body) => ({method,headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    function showToast(message){const el=document.getElementById("toast");el.textContent=message;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),3000)}
+    let modalReturnFocus = null;
+    function openModal(id){
+      const backdrop=document.getElementById(id);
+      modalReturnFocus=document.activeElement;
+      backdrop.classList.add("open");
+      document.body.classList.add("modal-open");
+      backdrop.querySelector("input:not([type=button]),select,textarea")?.focus();
+    }
+    function closeModal(id){
+      document.getElementById(id).classList.remove("open");
+      if(!document.querySelector(".modal-backdrop.open"))document.body.classList.remove("modal-open");
+      if(modalReturnFocus?.isConnected)modalReturnFocus.focus();
+      modalReturnFocus=null;
+    }
+    function navigate(page){
+      document.querySelectorAll(".page").forEach(el=>el.classList.toggle("active",el.id===`page-${page}`));
+      document.querySelectorAll(".nav button").forEach(el=>{
+        const active=el.dataset.page===page;
+        el.classList.toggle("active",active);
+        if(active)el.setAttribute("aria-current","page");else el.removeAttribute("aria-current");
+      });
+      document.getElementById("pageTitle").textContent=pageCopy[page][0];
+      document.getElementById("pageSubtitle").textContent=pageCopy[page][1];
+      document.querySelector(`.nav button[data-page="${page}"]`)?.scrollIntoView({block:"nearest",inline:"center",behavior:"smooth"});
+    }
+    document.querySelectorAll(".nav button").forEach(button=>button.addEventListener("click",()=>navigate(button.dataset.page)));
+    document.querySelectorAll("[data-goto]").forEach(button=>button.addEventListener("click",()=>navigate(button.dataset.goto)));
+    document.querySelectorAll(".modal-backdrop").forEach(backdrop=>backdrop.addEventListener("click",event=>{if(event.target===backdrop)closeModal(backdrop.id)}));
+    document.addEventListener("keydown",event=>{if(event.key==="Escape")document.querySelectorAll(".modal-backdrop.open").forEach(modal=>closeModal(modal.id))});
+
+    function renderTrend(months){
+      const el=document.getElementById("trendChart");
+      if(!months.length){el.innerHTML='<div class="empty">Add transactions to see a trend.</div>';return}
+      const legend=document.getElementById("trendLegend");
+      if(trendChartType==="table"){
+        legend.style.display="none";
+        const rows=months.map(item=>{
+          const net=Number(item.inflow||0)-Number(item.outflow||0);
+          return `<tr><td><strong>${escapeHtml(item.month)}</strong></td><td>${money(item.inflow)}</td><td>${money(item.outflow)}</td><td class="${net>=0?"net-positive":"net-negative"}">${net<0?"−":"+"}${money(Math.abs(net))}</td></tr>`;
+        }).join("");
+        el.innerHTML=`<div class="table-wrap chart-data-table"><table class="table" aria-label="Monthly cash flow data"><thead><tr><th>Month</th><th>Money in</th><th>Money out</th><th>Net</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+        return;
+      }
+      legend.style.display="flex";
+      const values=months.flatMap(item=>[Number(item.inflow||0),Number(item.outflow||0)]);
+      const max=Math.max(1,...values);
+      const width=760,height=280,left=76,right=18,top=18,bottom=224,plotWidth=width-left-right,plotHeight=bottom-top;
+      const x=index=>left+(index+.5)*plotWidth/months.length;
+      const y=value=>bottom-(value/max)*plotHeight;
+      const ticks=[0,max/2,max];
+      const grid=ticks.map(value=>`<g><line x1="${left}" y1="${y(value)}" x2="${width-right}" y2="${y(value)}" stroke="#edf1ee"/><text x="${left-10}" y="${y(value)+4}" text-anchor="end" fill="#87938a" font-size="11">${compactMoney(value)}</text></g>`).join("");
+      const monthLabels=months.map((item,index)=>`<text x="${x(index)}" y="${bottom+25}" text-anchor="middle" fill="#78877d" font-size="11">${escapeHtml(item.month.split(" ")[0])}</text>`).join("");
+      let marks="";
+      let chartLabel="Six month cash flow grouped bar chart";
+      if(trendChartType==="line"){
+        chartLabel="Six month cash flow line chart";
+        const series=[{key:"inflow",color:"#4d936a",label:"Money in"},{key:"outflow",color:"#d88772",label:"Money out"}];
+        marks=series.map(item=>{
+          const path=months.map((month,index)=>`${index?"L":"M"}${x(index).toFixed(1)},${y(Number(month[item.key]||0)).toFixed(1)}`).join(" ");
+          const points=months.map((month,index)=>`<circle cx="${x(index)}" cy="${y(Number(month[item.key]||0))}" r="5" fill="${item.color}" stroke="white" stroke-width="2"><title>${escapeHtml(month.month)} · ${item.label}: ${money(month[item.key])}</title></circle>`).join("");
+          return `<path d="${path}" fill="none" stroke="${item.color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${points}`;
+        }).join("");
+      }else{
+        const groupWidth=plotWidth/months.length;
+        const barWidth=Math.min(25,groupWidth*.25);
+        marks=months.map((item,index)=>{
+          const center=x(index),inflow=Number(item.inflow||0),outflow=Number(item.outflow||0);
+          const inflowY=y(inflow),outflowY=y(outflow);
+          return `<rect x="${center-barWidth-2}" y="${inflowY}" width="${barWidth}" height="${bottom-inflowY}" rx="4" fill="#67a87d"><title>${escapeHtml(item.month)} money in: ${money(inflow)}</title></rect><rect x="${center+2}" y="${outflowY}" width="${barWidth}" height="${bottom-outflowY}" rx="4" fill="#dc927f"><title>${escapeHtml(item.month)} money out: ${money(outflow)}</title></rect>`;
+        }).join("");
+      }
+      el.innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${chartLabel}">${grid}${marks}${monthLabels}</svg>`;
+    }
+    function compactMoney(value){
+      const amount=Number(value)||0,absolute=Math.abs(amount);
+      if(absolute>=10000000)return `₹${(amount/10000000).toFixed(1)}Cr`;
+      if(absolute>=100000)return `₹${(amount/100000).toFixed(1)}L`;
+      if(absolute>=1000)return `₹${(amount/1000).toFixed(0)}k`;
+      return money(amount);
+    }
+    function setChartType(chart,type){
+      document.querySelectorAll(`.chart-switch button[data-chart="${chart}"]`).forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.type===type)));
+      if(chart==="trend"&&["bar","line","table"].includes(type)){
+        trendChartType=type;
+        if(dashboardData)renderTrend(dashboardData.monthly_trend||[]);
+      }else if(chart==="expense"&&["bar","donut","table"].includes(type)){
+        expenseChartType=type;
+        if(dashboardData)renderExpenseMix(dashboardData);
+      }
+    }
+    function renderAlerts(alerts){
+      document.getElementById("alertCount").textContent=`${alerts.length} active`;
+      document.getElementById("alertsContainer").innerHTML=alerts.length?alerts.slice(0,5).map(alert=>`<div class="alert ${alert.severity==="CRITICAL"?"critical":""}"><div class="alert-title">${escapeHtml(alert.title)}</div><div class="alert-copy">${escapeHtml(alert.message)}</div></div>`).join(""):'<div class="empty">No active alerts. Keep your ledger up to date.</div>';
+    }
+    function renderExpenseMix(data){
+      const allCategories=Object.entries(data.category_breakdown||{})
+        .map(([name,value])=>[name,Math.max(0,Number(value)||0)])
+        .filter(([,value])=>value>0)
+        .sort((a,b)=>b[1]-a[1]);
+      const total=allCategories.reduce((sum,[,value])=>sum+value,0);
+      const el=document.getElementById("categoryList");
+      if(!allCategories.length||!total){el.innerHTML='<div class="empty">Current-month expenses will appear here.</div>';return}
+      const palette=["#4f9569","#5689b4","#e19766","#9a7bc1","#d47e83","#63a9a0"];
+      const displayCategories=allCategories.length>6
+        ?[...allCategories.slice(0,5),["All other categories",allCategories.slice(5).reduce((sum,[,value])=>sum+value,0)]]
+        :allCategories;
+      const percentage=value=>value/total*100;
+      if(expenseChartType==="table"){
+        const rows=allCategories.map(([name,value])=>`<tr><td><strong>${escapeHtml(name)}</strong></td><td>${percentage(value).toFixed(1)}%</td><td>${money(value)}</td></tr>`).join("");
+        el.innerHTML=`<div class="table-wrap chart-data-table"><table class="table" aria-label="Expenses by category"><thead><tr><th>Category</th><th>Share</th><th>Amount</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><th colspan="2">Total</th><th>${money(total)}</th></tr></tfoot></table></div>`;
+      }else if(expenseChartType==="donut"){
+        let current=0;
+        const gradient=displayCategories.map(([,value],index)=>{
+          const start=current;
+          current=index===displayCategories.length-1?100:current+percentage(value);
+          return `${palette[index%palette.length]} ${start.toFixed(2)}% ${current.toFixed(2)}%`;
+        }).join(",");
+        const legend=displayCategories.map(([name,value],index)=>`<div class="donut-legend-row"><div class="donut-legend-label"><span class="expense-swatch" style="background:${palette[index%palette.length]}"></span><span>${escapeHtml(name)}</span></div><div class="donut-legend-value">${percentage(value).toFixed(1)}%<br>${money(value)}</div></div>`).join("");
+        el.innerHTML=`<div class="donut-layout"><div class="donut-chart" role="img" aria-label="Expense mix by category" style="background:conic-gradient(${gradient})"><div class="donut-hole"><strong>${money(total)}</strong><span>Total expenses</span></div></div><div class="donut-legend">${legend}</div></div>`;
+      }else{
+        el.innerHTML=`<div class="expense-rows">${displayCategories.map(([name,value],index)=>{
+          const share=percentage(value);
+          return `<div class="expense-row"><div class="expense-row-heading"><div class="expense-row-name"><span class="expense-swatch" style="background:${palette[index%palette.length]}"></span><span>${escapeHtml(name)}</span></div><div class="expense-row-value">${money(value)}<small>${share.toFixed(1)}% of total</small></div></div><div class="expense-track"><span style="width:${Math.max(2,share).toFixed(2)}%;background:${palette[index%palette.length]}"></span></div></div>`;
+        }).join("")}</div>`;
+      }
+    }
+    function renderBusinessInsights(data){
+      renderExpenseMix(data);
+      const anomalies=data.anomalies||[];
+      document.getElementById("anomalyList").innerHTML=anomalies.length?anomalies.map(item=>`<div class="list-row"><div><div class="row-title">${escapeHtml(item.vendor)} · ${escapeHtml(item.category)}</div><div class="row-sub">${escapeHtml(item.reason)}</div></div><div class="row-right"><span class="tag red">${money(item.amount)}</span></div></div>`).join(""):'<div class="empty">No unusual expenses were detected against the available baseline.</div>';
+    }
+    function renderPayables(data){
+      const payables=data.upcoming_payables||[];
+      const payRows=payables.map(item=>`<tr><td><strong>${escapeHtml(item.title)}</strong><div class="row-sub">${escapeHtml(item.category)}</div></td><td>${escapeHtml(item.due_date)}</td><td>${money(item.amount)}</td><td><span class="tag ${item.days_remaining<0?"red":item.days_remaining<=7?"amber":"green"}">${item.days_remaining<0?`${Math.abs(item.days_remaining)}d overdue`:item.days_remaining===0?"Due today":`${item.days_remaining}d`}</span></td><td><button class="row-action" onclick="settlePayable(${Number(item.id)})">Record paid</button></td></tr>`).join("");
+      document.getElementById("payablesTable").innerHTML=payRows?`<table class="table"><thead><tr><th>Obligation</th><th>Due</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead><tbody>${payRows}</tbody></table>`:'<div class="empty">No unpaid obligations. Add a payable to plan upcoming cash needs.</div>';
+      document.getElementById("upcomingList").innerHTML=payables.slice(0,3).map(item=>`<div class="list-row"><div><div class="row-title">${escapeHtml(item.title)}</div><div class="row-sub">Due ${escapeHtml(item.due_date)}</div></div><div class="row-right"><div class="row-amount">${money(item.amount)}</div><span class="tag ${item.days_remaining<0?"red":"amber"}">${item.days_remaining<0?"Overdue":item.days_remaining===0?"Today":`${item.days_remaining}d`}</span></div></div>`).join("")||'<div class="empty">No open obligations.</div>';
+    }
+    function renderReceivables(data){
+      const rows=data.receivables||[];
+      const open=rows.filter(item=>item.status==="OPEN");
+      const renderTable=list=>list.map(item=>`<tr><td><strong>${escapeHtml(item.invoice_number)}</strong></td><td>${escapeHtml(item.customer)}</td><td>${money(item.amount)}</td><td>${escapeHtml(item.due_date)}</td><td><span class="tag ${item.overdue_days>0?"red":item.status==="PAID"?"green":"blue"}">${item.status==="PAID"?"Paid":item.overdue_days?`${item.overdue_days}d overdue`:"Open · current"}</span><div class="row-sub">${escapeHtml(item.aging_bucket)} ageing</div></td><td>${item.status==="OPEN"?`<button class="row-action" onclick="settleInvoice(${Number(item.id)})">Record paid</button>`:"—"}</td></tr>`).join("");
+      const table=renderTable(rows);
+      document.getElementById("receivablesTable").innerHTML=table?`<table class="table"><thead><tr><th>Invoice</th><th>Customer</th><th>Amount</th><th>Due date</th><th>Ageing</th><th>Action</th></tr></thead><tbody>${table}</tbody></table>`:'<div class="empty">No invoices yet. Capture an invoice to start tracking expected collections.</div>';
+      document.getElementById("invoiceList").innerHTML=table?`<table class="table"><thead><tr><th>Invoice</th><th>Customer</th><th>Amount</th><th>Due date</th><th>Status</th></tr></thead><tbody>${rows.slice(0,5).map(item=>`<tr><td><strong>${escapeHtml(item.invoice_number)}</strong></td><td>${escapeHtml(item.customer)}</td><td>${money(item.amount)}</td><td>${escapeHtml(item.due_date)}</td><td><span class="tag ${item.status==="PAID"?"green":item.overdue_days?"red":"blue"}">${item.status==="PAID"?"Paid":item.overdue_days?"Overdue":"Open"}</span></td></tr>`).join("")}</tbody></table>`:'<div class="empty">No captured invoices.</div>';
+      document.getElementById("receivableTotal").textContent=money(data.open_total);
+      document.getElementById("overdueCount").textContent=String(open.filter(item=>item.overdue_days>0).length);
+      document.getElementById("kpiReceivables").textContent=money(data.open_total);
+    }
+    function renderForecast(data){
+      forecastData=data;
+      document.getElementById("forecastCash").textContent=money(data.current_cash);
+      document.getElementById("forecastInflows").textContent=money(data.expected_inflows);
+      document.getElementById("forecastOutflows").textContent=money(data.scheduled_payables);
+      document.getElementById("forecastLow").textContent=money(data.minimum_balance);
+      document.getElementById("forecastRisk").textContent=data.shortfall>0?`${money(data.shortfall)} projected cash gap to review`:"No negative balance in this scenario";
+      document.getElementById("forecastRisk").style.color=data.shortfall>0?"#a5483e":"#4d7c5e";
+      document.getElementById("forecastConfidence").textContent=`${data.confidence||"LOW"} confidence`;
+      document.getElementById("confidenceReason").textContent=data.confidence_reason||"Insufficient recorded history for a reliable estimate.";
+      document.getElementById("forecastAssumptions").innerHTML=(data.assumptions||[]).map(item=>`• ${escapeHtml(item)}`).join("<br>");
+      const points=data.points||[];
+      const el=document.getElementById("forecastChart");
+      if(!points.length){el.innerHTML='<div class="empty">No company data available for a forecast.</div>';return}
+      const width=780,height=250,left=50,right=16,top=18,bottom=210,values=points.map(point=>point.balance);
+      let min=Math.min(0,...values),max=Math.max(1,...values);if(min===max)max=min+1;
+      const x=index=>left+index*(width-left-right)/(points.length-1);
+      const y=value=>top+(max-value)*(bottom-top)/(max-min);
+      const path=points.map((point,index)=>`${index?"L":"M"}${x(index).toFixed(1)},${y(point.balance).toFixed(1)}`).join(" ");
+      const zeroY=y(0);
+      const labels=[0,5,10,15,20,25,30].filter(day=>day<points.length).map(day=>`<text x="${x(day)}" y="235" text-anchor="middle" fill="#8792a2" font-size="9">Day ${day}</text>`).join("");
+      const yLabels=[max,(max+min)/2,min].map(value=>`<g><line x1="${left}" y1="${y(value)}" x2="${width-right}" y2="${y(value)}" stroke="#edf0f4"/><text x="${left-8}" y="${y(value)+3}" text-anchor="end" fill="#8792a2" font-size="9">${money(value)}</text></g>`).join("");
+      const area=`${path} L${x(points.length-1)},${bottom} L${x(0)},${bottom} Z`;
+      el.innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Thirty day cash forecast"><defs><linearGradient id="cashFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#6fa384" stop-opacity=".23"/><stop offset="100%" stop-color="#6fa384" stop-opacity=".01"/></linearGradient></defs>${yLabels}<line x1="${left}" y1="${zeroY}" x2="${width-right}" y2="${zeroY}" stroke="#cc8a7b" stroke-dasharray="4 4"/><path d="${area}" fill="url(#cashFill)"/><path d="${path}" fill="none" stroke="#4e8665" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${points.map((point,index)=>index%5===0||index===points.length-1?`<circle cx="${x(index)}" cy="${y(point.balance)}" r="3" fill="#4e8665"><title>${escapeHtml(point.date)} · ${money(point.balance)}</title></circle>`:"").join("")}${labels}</svg>`;
+    }
+    function renderDashboard(data){
+      dashboardData=data;
+      document.getElementById("companyName").textContent=data.company_name||"Demo business";
+      document.getElementById("kpiCash").textContent=money(data.current_cash);
+      document.getElementById("kpiExpense").textContent=money(data.current_month_expense);
+      document.getElementById("kpiRunway").textContent=data.runway_months===null?"—":`${data.runway_months} mo`;
+      document.getElementById("kpiMoM").textContent=data.previous_month_expense>0?`${data.mom_expense_change_pct>0?"+":""}${data.mom_expense_change_pct}% vs prior month`:"No previous-month comparison";
+      document.getElementById("kpiPayables").textContent=`Upcoming payables ${money(data.upcoming_payables_total)}`;
+      document.getElementById("cfoOutput").textContent=(data.dashboard_insights||[]).join("\n");
+      renderTrend(data.monthly_trend||[]);
+      renderAlerts(data.alerts||[]);
+      renderBusinessInsights(data);
+      renderPayables(data);
+    }
+    async function refresh(showConfirmation=false){
+      const refreshButton=document.getElementById("refreshButton");
+      if(showConfirmation&&refreshButton){refreshButton.disabled=true;refreshButton.textContent="Refreshing…"}
+      try{
+        const [dashboard,forecast,receivables]=await Promise.all([
+          api(`/api/v1/dashboard/${COMPANY_ID}`),
+          api(`/api/v1/forecast/${COMPANY_ID}`),
+          api(`/api/v1/receivables/${COMPANY_ID}`)
+        ]);
+        renderDashboard(dashboard);renderForecast(forecast);receivableData=receivables;renderReceivables(receivables);
+        if(showConfirmation)showToast("Your dashboard is up to date.");
+      }catch(error){showToast(`Unable to load dashboard: ${error.message}`)}
+      finally{if(showConfirmation&&refreshButton){refreshButton.disabled=false;refreshButton.textContent="↻ Refresh"}}
+    }
+    async function runCFOBriefing(){
+      const button=document.getElementById("askButton");const output=document.getElementById("cfoOutput");
+      button.disabled=true;output.textContent="Reviewing the ledger, forecast and upcoming obligations…";
+      try{const data=await api("/api/v1/cfo/ask",jsonOptions("POST",{company_id:COMPANY_ID,question:document.getElementById("cfoQuestion").value||undefined}));output.textContent=data.briefing}
+      catch(error){output.textContent=`Unable to generate CFO insights: ${error.message}`}
+      finally{button.disabled=false}
+    }
+    function suggestCFOQuestion(question){
+      const input=document.getElementById("cfoQuestion");
+      input.value=question;
+      input.focus();
+    }
+    async function submitTx(event){
+      event.preventDefault();
+      try{await api("/api/v1/transactions",jsonOptions("POST",{company_id:COMPANY_ID,tx_type:document.getElementById("txType").value,category:document.getElementById("txCategory").value,vendor_or_client:document.getElementById("txVendor").value,amount:Number(document.getElementById("txAmount").value),tx_date:document.getElementById("txDate").value}));closeModal("txModal");event.target.reset();document.getElementById("txDate").valueAsDate=new Date();await refresh();showToast("Transaction added to the ledger.")}
+      catch(error){showToast(error.message)}
+    }
+    async function submitPayable(event){
+      event.preventDefault();
+      try{await api("/api/v1/payables",jsonOptions("POST",{company_id:COMPANY_ID,title:document.getElementById("payName").value,category:document.getElementById("payCategory").value,amount:Number(document.getElementById("payAmount").value),due_date:document.getElementById("payDueDate").value}));closeModal("payableModal");event.target.reset();await refresh();showToast("Payable scheduled.")}
+      catch(error){showToast(error.message)}
+    }
+    async function submitInvoice(event){
+      event.preventDefault();
+      const expected=document.getElementById("invoiceExpected").value;
+      try{await api("/api/v1/receivables",jsonOptions("POST",{company_id:COMPANY_ID,invoice_number:document.getElementById("invoiceNumber").value,customer:document.getElementById("invoiceCustomer").value,amount:Number(document.getElementById("invoiceAmount").value),issue_date:document.getElementById("invoiceIssue").value,due_date:document.getElementById("invoiceDue").value,expected_collection_date:expected||null}));closeModal("invoiceModal");event.target.reset();await refresh();showToast("Invoice captured and added to the forecast.")}
+      catch(error){showToast(error.message)}
+    }
+    async function extractInvoice(){
+      const file=document.getElementById("invoiceFile").files[0];
+      const status=document.getElementById("extractStatus");
+      const button=document.getElementById("extractButton");
+      const preview=document.getElementById("extractionPreview");
+      if(!file){status.textContent="Choose an invoice document first.";return}
+      button.disabled=true;status.textContent="Sending the document to Gemini for extraction…";preview.innerHTML="";
+      try{
+        const form=new FormData();form.append("file",file);
+        extractedInvoice=await api("/api/v1/invoices/extract",{method:"POST",body:form});
+        const fields=extractedInvoice.fields;
+        const labels=[["Invoice number","invoice_number"],["Supplier","supplier"],["Customer","customer"],["Total amount","amount"],["Issue date","issue_date"],["Due date","due_date"]];
+        const extractedRows=labels.map(([label,key])=>`<div class="metric-row"><span>${label}</span><strong>${escapeHtml(fields[key]||"Not found")}</strong></div>`).join("");
+        const warnings=extractedInvoice.warnings.length?`<div class="alert" style="margin-top:10px"><div class="alert-title">Review missing fields</div><div class="alert-copy">${extractedInvoice.warnings.map(escapeHtml).join("<br>")}</div></div>`:"";
+        preview.innerHTML=`<div class="card" style="padding:12px"><div class="card-head"><div><div class="card-title">${escapeHtml(extractedInvoice.filename)}</div><div class="card-caption">Gemini field extraction · local OCR confidence ${(extractedInvoice.ocr_confidence*100).toFixed(1)}% · check all values</div></div><span class="tag green">Review required</span></div>${extractedRows}${warnings}<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:12px"><button class="secondary" onclick="useExtractedInvoice('receivable')">Review as receivable</button><button class="secondary" onclick="useExtractedInvoice('payable')">Review as payable</button></div><details style="margin-top:10px"><summary class="small" style="cursor:pointer">Show local OCR text</summary><pre class="small" style="white-space:pre-wrap;max-height:180px;overflow:auto">${escapeHtml(extractedInvoice.text)}</pre></details></div>`;
+        status.textContent="Extraction complete. Review fields and choose how to save this invoice.";
+      }catch(error){extractedInvoice=null;status.textContent=error.message}
+      finally{button.disabled=false}
+    }
+    function updateInvoiceSelection(file){
+      const fileName=document.getElementById("invoiceFileName");
+      const status=document.getElementById("extractStatus");
+      if(!file){fileName.textContent="No file selected yet.";return}
+      const supported=/\.(pdf|png|jpe?g|webp)$/i.test(file.name);
+      if(!supported){invoiceFileInput.value="";fileName.textContent="That file type is not supported.";status.textContent="Choose a PDF, PNG, JPEG or WEBP file.";return}
+      if(file.size>12*1024*1024){invoiceFileInput.value="";fileName.textContent="This file is larger than 12 MB.";status.textContent="Choose a smaller invoice file.";return}
+      fileName.textContent=`Selected: ${file.name} · ${(file.size/1024/1024).toFixed(2)} MB`;
+      status.textContent="Ready. Gemini will analyze the invoice after you choose Extract invoice details.";
+    }
+    function useExtractedInvoice(direction){
+      if(!extractedInvoice)return;
+      const fields=extractedInvoice.fields;
+      if(direction==="receivable"){
+        document.getElementById("invoiceNumber").value=fields.invoice_number||"";
+        document.getElementById("invoiceCustomer").value=fields.customer||"";
+        document.getElementById("invoiceAmount").value=fields.amount||"";
+        document.getElementById("invoiceIssue").value=fields.issue_date||new Date().toISOString().slice(0,10);
+        document.getElementById("invoiceDue").value=fields.due_date||"";
+        document.getElementById("invoiceExpected").value=fields.due_date||"";
+        openModal("invoiceModal");
+        return;
+      }
+      const reference=fields.invoice_number?` · ${fields.invoice_number}`:"";
+      document.getElementById("payName").value=`${fields.supplier||"Supplier invoice"}${reference}`;
+      document.getElementById("payCategory").value="Supplier invoice";
+      document.getElementById("payAmount").value=fields.amount||"";
+      document.getElementById("payDueDate").value=fields.due_date||"";
+      openModal("payableModal");
+    }
+    async function settleInvoice(id){if(!confirm("Record this invoice as paid and add the collection to the ledger?"))return;try{await api(`/api/v1/receivables/${id}/settle`,{method:"POST"});await refresh();showToast("Invoice settlement recorded.")}catch(error){showToast(error.message)}}
+    async function settlePayable(id){if(!confirm("Record this obligation as paid and deduct it from cash?"))return;try{await api(`/api/v1/payables/${id}/pay`,{method:"POST"});await refresh();showToast("Payable settlement recorded.")}catch(error){showToast(error.message)}}
+    document.getElementById("txDate").valueAsDate=new Date();
+    const today=new Date().toISOString().slice(0,10);
+    document.getElementById("invoiceIssue").value=today;
+    document.getElementById("invoiceDue").value=new Date(Date.now()+14*86400000).toISOString().slice(0,10);
+    document.getElementById("payDueDate").value=new Date(Date.now()+7*86400000).toISOString().slice(0,10);
+    document.getElementById("invoiceIssue").addEventListener("change",event=>{if(!document.getElementById("invoiceExpected").value)document.getElementById("invoiceDue").min=event.target.value});
+    const invoiceFileInput=document.getElementById("invoiceFile");
+    const invoiceDropzone=document.getElementById("invoiceDropzone");
+    invoiceFileInput.addEventListener("change",()=>updateInvoiceSelection(invoiceFileInput.files[0]));
+    invoiceDropzone.addEventListener("dragover",event=>{event.preventDefault();invoiceDropzone.classList.add("dragging")});
+    invoiceDropzone.addEventListener("dragleave",()=>invoiceDropzone.classList.remove("dragging"));
+    invoiceDropzone.addEventListener("drop",event=>{
+      event.preventDefault();
+      invoiceDropzone.classList.remove("dragging");
+      if(event.dataTransfer.files.length){
+        invoiceFileInput.files=event.dataTransfer.files;
+        updateInvoiceSelection(invoiceFileInput.files[0]);
+      }
+    });
+    document.getElementById("cfoQuestion").addEventListener("keydown",event=>{if(event.key==="Enter")runCFOBriefing()});
+    refresh();
+  </script>
+</body>
+</html>
